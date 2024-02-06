@@ -12,13 +12,6 @@ from torchvision import transforms
 from PIL import Image
 from utils.model import ResNet9
 
-
-# ==============================================================================================
-
-# -------------------------LOADING THE TRAINED MODELS -----------------------------------------------
-
-# Loading plant disease classification model
-
 disease_classes = ['Apple___Apple_scab',
                    'Apple___Black_rot',
                    'Apple___Cedar_apple_rust',
@@ -65,17 +58,9 @@ disease_model.load_state_dict(torch.load(
 disease_model.eval()
 
 
-# Loading crop recommendation model
-
 crop_recommendation_model_path = 'C:/Users/vasan/Downloads/Harvestify-master/Harvestify-master/app/models/RandomForest.pkl'
 crop_recommendation_model = pickle.load(
     open(crop_recommendation_model_path, 'rb'))
-
-
-# =========================================================================================
-
-# Custom functions for calculations
-
 
 def weather_fetch(city_name):
     """
@@ -113,30 +98,17 @@ def predict_image(img, model=disease_model):
     image = Image.open(io.BytesIO(img))
     img_t = transform(image)
     img_u = torch.unsqueeze(img_t, 0)
-
-    # Get predictions from model
     yb = model(img_u)
-    # Pick index with highest probability
     _, preds = torch.max(yb, dim=1)
     prediction = disease_classes[preds[0].item()]
-    # Retrieve the class label
     return prediction
 
-# ===============================================================================================
-# ------------------------------------ FLASK APP -------------------------------------------------
-
-
 app = Flask(__name__)
-
-# render home page
-
 
 @ app.route('/')
 def home():
     title = 'Harvestify - Home'
     return render_template('index.html', title=title)
-
-# render crop recommendation form page
 
 
 @ app.route('/crop-recommend')
@@ -152,17 +124,6 @@ def fertilizer_recommendation():
     title = 'Harvestify - Fertilizer Suggestion'
 
     return render_template('fertilizer.html', title=title)
-
-# render disease prediction input page
-
-
-
-
-# ===============================================================================================
-
-# RENDER PREDICTION PAGES
-
-# render crop recommendation result page
 
 
 @ app.route('/crop-predict', methods=['POST'])
@@ -191,7 +152,6 @@ def crop_prediction():
 
             return render_template('try_again.html', title=title)
 
-# render fertilizer recommendation result page
 
 
 @ app.route('/fertilizer-predict', methods=['POST'])
@@ -235,9 +195,6 @@ def fert_recommend():
 
     return render_template('fertilizer-result.html', recommendation=response, title=title)
 
-# render disease prediction result page
-
-
 @app.route('/disease-predict', methods=['GET', 'POST'])
 def disease_prediction():
     title = 'Harvestify - Disease Detection'
@@ -258,6 +215,6 @@ def disease_prediction():
         except:
             pass
     return render_template('disease.html', title=title)
-# ===============================================================================================
+
 if __name__ == '__main__':
     app.run(debug=True)
