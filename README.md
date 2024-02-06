@@ -1,2 +1,2 @@
 # deployment
-This is a sample Flask project
+This is a Flask mini project
