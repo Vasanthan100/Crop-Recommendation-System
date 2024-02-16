@@ -13,7 +13,7 @@ The project follows a standard Flask application structure:
    - models/: Stores pre-trained machine learning models (e.g., your_model.pkl).
    - utils.py: Includes utility functions used within the application.
  - venv/: Virtual environment directory for Python dependencies.
- - app.py: Main application script to run the Flask server.
+ - app.py: Main application script to run the Flask server. To run the application `flask app.py`.
  - requirements.txt: Lists all Python packages required for the project. Install these using `pip install -r requirements.txt`.
 
 
